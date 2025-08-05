@@ -54,6 +54,11 @@ make all
 
 ## Usage
 
+To install in claude code, run
+```bash
+claude mcp add -s user prompt-user /full/path/to/prompt-mcp* -- serve
+```
+
 The server supports two input methods:
 
 ### TTY Method (Terminal)
