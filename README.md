@@ -26,8 +26,12 @@ Download the latest release for your platform from the [GitHub Releases](../../r
 - **Windows**: `prompt-mcp-windows-amd64.exe` or `prompt-mcp-windows-arm64.exe`
 - **Linux**: `prompt-mcp-linux-amd64` or `prompt-mcp-linux-arm64`  
 - **macOS**: `prompt-mcp-darwin-amd64` or `prompt-mcp-darwin-arm64`
+    - Given macOS's security constraints, you will have to 
+        a. Make the executable runnable (`chmod +x <executable name>`)
+        b. Allow the binary to run through settings > privacy > security
+    - Basically, it might be a little easier to just build and run it yourself. up to you tho
 
-Extract the archive and run the binary:
+Run the binary:
 
 ```bash
 # Linux/macOS
@@ -63,4 +67,4 @@ echo '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"user_input
 ```
 
 The web method automatically opens your browser to a simple input form and works well with Claude Code and other environments where stdin/stdout are redirected.
-    
+
