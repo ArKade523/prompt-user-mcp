@@ -23,19 +23,17 @@ It has two primary use cases:
 
 Download the latest release for your platform from the [GitHub Releases](../../releases) page:
 
-- **Windows**: `prompt-mcp-windows-amd64.zip` or `prompt-mcp-windows-arm64.zip`
-- **Linux**: `prompt-mcp-linux-amd64.tar.gz` or `prompt-mcp-linux-arm64.tar.gz`  
-- **macOS**: `prompt-mcp-darwin-amd64.tar.gz` or `prompt-mcp-darwin-arm64.tar.gz`
+- **Windows**: `prompt-mcp-windows-amd64.exe` or `prompt-mcp-windows-arm64.exe`
+- **Linux**: `prompt-mcp-linux-amd64` or `prompt-mcp-linux-arm64`  
+- **macOS**: `prompt-mcp-darwin-amd64` or `prompt-mcp-darwin-arm64`
 
 Extract the archive and run the binary:
 
 ```bash
 # Linux/macOS
-tar -xzf prompt-mcp-*.tar.gz
 ./prompt-mcp-* serve
 
 # Windows (PowerShell)
-Expand-Archive prompt-mcp-*.zip
 .\prompt-mcp-*.exe serve
 ```
 

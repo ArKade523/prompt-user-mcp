@@ -64,23 +64,13 @@ jobs:
         mkdir -p bin
         go build -ldflags="-s -w" -o bin/prompt-mcp-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.suffix }} ./cli
     
-    - name: Create archive
-      run: |
-        cd bin
-        if [ "${{ matrix.goos }}" = "windows" ]; then
-          zip prompt-mcp-${{ matrix.goos }}-${{ matrix.goarch }}.zip prompt-mcp-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.suffix }}
-        else
-          tar -czf prompt-mcp-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz prompt-mcp-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.suffix }}
-        fi
-        ls -la
-    
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: prompt-mcp-${{ matrix.goos }}-${{ matrix.goarch }}
         path: |
-          bin/prompt-mcp-${{ matrix.goos }}-${{ matrix.goarch }}.zip
-          bin/prompt-mcp-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz
+          bin/prompt-mcp-${{ matrix.goos }}-${{ matrix.goarch }}.exe
+          bin/prompt-mcp-${{ matrix.goos }}-${{ matrix.goarch }}
         retention-days: 30
         if-no-files-found: ignore
 
