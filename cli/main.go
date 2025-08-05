@@ -33,10 +33,10 @@ var serveCmd = &cobra.Command{
 		if verbose {
 			fmt.Fprintf(os.Stderr, "Starting MCP server...\n")
 		}
-		
+
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
-		
+
 		// Handle shutdown signals
 		sigChan := make(chan os.Signal, 1)
 		signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
@@ -47,7 +47,7 @@ var serveCmd = &cobra.Command{
 			}
 			cancel()
 		}()
-		
+
 		srv := server.NewMCPServer()
 		if err := srv.Start(ctx); err != nil {
 			fmt.Fprintf(os.Stderr, "Server error: %v\n", err)
@@ -58,7 +58,7 @@ var serveCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(serveCmd)
-	
+
 	serveCmd.Flags().IntVarP(&port, "port", "p", 8080, "Port to listen on (future use)")
 	serveCmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose logging")
 }
