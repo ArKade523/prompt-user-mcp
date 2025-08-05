@@ -58,26 +58,36 @@ Implemented full MCP 2024-11-05 specification support:
 #### User Input Tool
 - **Name**: `user_input`
 - **Purpose**: Allow LLM agents to request user input/approval without breaking their execution flow
-- **Schema**: Requires `prompt` string parameter, optional `timeout` integer
+- **Schema**: 
+  - Required: `prompt` string parameter
+  - Optional: `timeout` integer, `method` string (`"tty"` or `"web"`, defaults to `"tty"`)
+- **Input Methods**:
+  - `"tty"`: Direct terminal access via `/dev/tty` (works when run directly from terminal)
+  - `"web"`: Opens browser tab with input form (works with Claude Code and other redirected environments)
 - **Response**: Returns user's text response in MCP content format
-- **Error Handling**: Graceful fallback if terminal access fails
+- **Error Handling**: Graceful fallback if chosen input method fails
 
 ### Features Implemented
 ✅ Full MCP server protocol compliance
 ✅ JSON-RPC message handling  
-✅ Terminal-based user input (solves stdin conflict)
-✅ Tool schema definitions
+✅ Dual input methods: TTY (terminal) and web (browser)
+✅ Terminal-based user input via `/dev/tty` (solves stdin conflict)
+✅ Web-based user input with automatic browser opening
+✅ Tool schema definitions with method parameter
 ✅ Comprehensive test coverage
 ✅ Backwards compatibility with legacy `user_input` method
 
 ### Assumptions Made
-- `/dev/tty` is available on target Unix systems (macOS/Linux)
-- User runs the MCP server in an interactive terminal environment
+- `/dev/tty` is available on target Unix systems (macOS/Linux) for TTY method
+- Web browser is available and accessible for web method
+- Default browser can be opened programmatically on target platform
 - Claude Code or other MCP clients handle JSON-RPC communication properly
 
 ### Future Enhancements (Deferred)
-- Windows support (would need different approach than `/dev/tty`)
-- Timeout handling for user input requests
-- Rich prompting with styled output
-- Multiple input types (confirmation dialogs, choice menus, etc.)
+- Windows TTY support (would need different approach than `/dev/tty`)
+- Enhanced timeout handling for user input requests
+- Rich prompting with styled output in web interface
+- Multiple input types (confirmation dialogs, choice menus, file uploads)
+- Secure HTTPS option for web method
+- Custom port configuration for web server
 
