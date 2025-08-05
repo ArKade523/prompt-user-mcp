@@ -1,0 +1,109 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  release:
+    types: [ created ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
+    
+    - name: Run tests
+      run: make test
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - goos: windows
+            goarch: amd64
+            suffix: .exe
+          - goos: windows
+            goarch: arm64
+            suffix: .exe
+          - goos: linux
+            goarch: amd64
+            suffix: ""
+          - goos: linux
+            goarch: arm64
+            suffix: ""
+          - goos: darwin
+            goarch: amd64
+            suffix: ""
+          - goos: darwin
+            goarch: arm64
+            suffix: ""
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
+    
+    - name: Build binary
+      env:
+        GOOS: ${{ matrix.goos }}
+        GOARCH: ${{ matrix.goarch }}
+        CGO_ENABLED: 0
+      run: |
+        mkdir -p bin
+        go build -ldflags="-s -w" -o bin/prompt-mcp-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.suffix }} ./cli
+    
+    - name: Create archive
+      run: |
+        cd bin
+        if [ "${{ matrix.goos }}" = "windows" ]; then
+          zip prompt-mcp-${{ matrix.goos }}-${{ matrix.goarch }}.zip prompt-mcp-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.suffix }}
+        else
+          tar -czf prompt-mcp-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz prompt-mcp-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.suffix }}
+        fi
+        ls -la
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: prompt-mcp-${{ matrix.goos }}-${{ matrix.goarch }}
+        path: |
+          bin/prompt-mcp-${{ matrix.goos }}-${{ matrix.goarch }}.zip
+          bin/prompt-mcp-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz
+        retention-days: 30
+        if-no-files-found: ignore
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: artifacts
+    
+    - name: Display structure of downloaded files
+      run: ls -R artifacts
+    
+    - name: Upload release assets
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          artifacts/*/prompt-mcp-*.zip
+          artifacts/*/prompt-mcp-*.tar.gz
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
