@@ -27,7 +27,9 @@ Download the latest release for your platform from the [GitHub Releases](../../r
 - **Linux**: `prompt-mcp-linux-amd64` or `prompt-mcp-linux-arm64`  
 - **macOS**: `prompt-mcp-darwin-amd64` or `prompt-mcp-darwin-arm64`
     - Given macOS's security constraints, you will have to 
+
         a. Make the executable runnable (`chmod +x <executable name>`)
+
         b. Allow the binary to run through settings > privacy > security
     - Basically, it might be a little easier to just build and run it yourself. up to you tho
 
